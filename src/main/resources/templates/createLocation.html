@@ -5,13 +5,14 @@
     <title>Title</title>
 </head>
 <body>
-<form action="" method="">
+<form action="saveLoc" method="post">
     ID: <input type="text" name="id">
     Code: <input type="text" name="code">
     Name: <input type="text" name="name">
-    Type: URBAN <input type="radio" name="type">
-    RURAL <input type="radio" name="type">
+    Type: URBAN <input type="radio" name="type" value="URBAN">
+    RURAL <input type="radio" name="type" value="RURAL">
     <input type="submit" value="save">
 </form>
+<span th:text="${msg != null} ? ${msg} : somevalue"/>
 </body>
 </html>

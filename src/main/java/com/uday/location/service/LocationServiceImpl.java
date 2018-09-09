@@ -7,16 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class LocationServiceImpl implements LocationService{
-
     @Autowired
     LocationRepository locationRepository;
-
     @Override
     public Location getLocationById(int id) {
         Location location=locationRepository.getOne(id);
         return location;
     }
-
     @Override
     public Location saveLocation(Location location) {
         return locationRepository.save(location);
