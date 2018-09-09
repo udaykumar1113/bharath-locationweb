@@ -6,7 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 public class LocationController {
@@ -26,5 +30,22 @@ public class LocationController {
         String msg="Location accessed for id: "+savedLocation.getId();
         modelMap.addAttribute("msg",msg);
         return "createLocation";
+    }
+
+    @RequestMapping("/viewLocations")
+    public String viewLocations(ModelMap modelMap){
+        List<Location> locationsList=locationRepository.findAll();
+        modelMap.addAttribute("locations",locationsList);
+        return "viewLocations";
+    }
+
+    @RequestMapping("/deleteLocation/{id}")
+    public String deleteLocation(@PathVariable("id") int id, ModelMap modelMap){
+        System.out.println("Inside delete location with id: "+id);
+        Location location=locationRepository.getOne(id);
+        locationRepository.delete(location);
+        List<Location> locationsList=locationRepository.findAll();
+        modelMap.addAttribute("locations",locationsList);
+        return "viewLocations";
     }
 }
