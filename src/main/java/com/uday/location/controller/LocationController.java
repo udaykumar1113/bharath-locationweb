@@ -2,13 +2,13 @@ package com.uday.location.controller;
 
 import com.uday.location.entities.Location;
 import com.uday.location.repository.LocationRepository;
+import com.uday.location.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -17,6 +17,9 @@ public class LocationController {
 
     @Autowired
     LocationRepository locationRepository;
+
+    @Autowired
+    LocationService locationService;
 
     @RequestMapping("/showCreate")
     public String showCreate(){
@@ -46,6 +49,19 @@ public class LocationController {
         locationRepository.delete(location);
         List<Location> locationsList=locationRepository.findAll();
         modelMap.addAttribute("locations",locationsList);
+        return "viewLocations";
+    }
+
+    @RequestMapping("/updateLocation/{id}")
+    public String updateLocation(@PathVariable("id") int id, ModelMap modelMap){
+        Location location=locationRepository.getOne(id);
+        modelMap.addAttribute("editingLocation",location);
+        return "editLocation";
+    }
+
+    @RequestMapping("/saveUpdateLoc")
+    public String saveUpdatedLocation(@ModelAttribute("location") Location location, ModelMap modelMap){
+        locationService.updateLocation(location);
         return "viewLocations";
     }
 }

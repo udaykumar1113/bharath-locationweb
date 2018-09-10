@@ -16,6 +16,7 @@ Locations:
         <td th:text="${location.code}"/>
         <td th:text="${location.type}"/>
         <td><a th:href="@{'deleteLocation/' + ${location.id}}">Delete</a></td>
+        <td><a th:href="@{'updateLocation/' + ${location.id}}">Update</a></td>
     </tr>
 </table>
 <br><br>
