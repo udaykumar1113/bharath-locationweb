@@ -3,23 +3,35 @@ package com.uday.location.controller;
 import com.uday.location.entities.Location;
 import com.uday.location.repository.LocationRepository;
 import com.uday.location.service.LocationService;
+import com.uday.location.utility.ReportUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.ServletContextAware;
 
+import javax.servlet.ServletContext;
 import java.util.List;
 
 @Controller
-public class LocationController {
+public class LocationController implements ServletContextAware{
 
     @Autowired
     LocationRepository locationRepository;
 
     @Autowired
     LocationService locationService;
+
+    @Autowired
+    ReportUtility reportUtility;
+
+    //@Value("${server.servlet.context-path}")
+    //String contextPath;
+
+    ServletContext ctx;
 
     @RequestMapping("/showCreate")
     public String showCreate(){
@@ -63,5 +75,21 @@ public class LocationController {
     public String saveUpdatedLocation(@ModelAttribute("location") Location location, ModelMap modelMap){
         locationService.updateLocation(location);
         return "viewLocations";
+    }
+
+    @RequestMapping("/generateReport")
+    public String generateReport(ModelMap modelMap){
+
+        List<Object[]> data=locationRepository.getTypeAndCountType();
+        System.out.println("servlet context "+ctx.getRealPath("/"));
+        System.out.print("get context path value is: "+ctx.getContextPath());
+        reportUtility.generatePieChart(ctx.getRealPath("/"),data);
+        modelMap.addAttribute("contextPath",ctx.getRealPath("/"));
+        return "report";
+    }
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        ctx=servletContext;
     }
 }
